@@ -179,12 +179,13 @@ function imgError (ele, type) {
       ele.src = 'https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/default_gavatar.jpg'
       break
     case 3:
-
-      ele.src = 'https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/image-404.png'
+      var bgindex = Math.floor(Math.random()*bg.length)
+      ele.src = bg[bgindex]
       break
     default:
       ele.src = 'https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/image-404.png'
   }
+    console.log('%c Github %c', 'background:#24272A; color:#ffffff', '', ele.src)
 }
 mashiro_global.post_list_show_animation = new function () {
   this.ini = function (ajax) {
@@ -825,8 +826,8 @@ function add_copyright () {
 
   function setClipboardText (event) {
     event.preventDefault()
-    var htmlData = '' + '著作权归作者所有。<br>' + '商业转载请联系作者获得授权，非商业转载请注明出处。<br>' + '作者：' + mashiro_option.author_name + '<br>' + '链接：' + window.location.href + '<br>' + '来源：' + mashiro_option.site_name + '<br><br>' + window.getSelection().toString().replace(/\r\n/g, '<br>')
-    var textData = '' + '著作权归作者所有。\n' + '商业转载请联系作者获得授权，非商业转载请注明出处。\n' + '' + mashiro_option.author_name + '\n' + '链接：' + window.location.href + '\n' + '来源：' + mashiro_option.site_name + '\n\n' + window.getSelection().toString().replace(/\r\n/g, '\n')
+    var htmlData = '' + window.getSelection().toString().replace(/\r\n/g, '\n')
+    var textData = '' + window.getSelection().toString().replace(/\r\n/g, '\n')
     if (event.clipboardData) {
       event.clipboardData.setData('text/html', htmlData)
       event.clipboardData.setData('text/plain', textData)
@@ -1047,7 +1048,17 @@ var home = location.href,
   s = $('#bgvideo')[0],
   Siren = {
     BSZ: function() {
-      $.getScript('//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js')
+    fetch('https://counts.42cloud.cn/api/counts.html')
+        .then(response => response.json())
+        .then(data => {
+              if (document.getElementById("readcount")) {
+                document.getElementById("readcount").innerHTML=data.Count;
+            }
+            if (document.getElementById("allcount")){
+                document.getElementById("allcount").innerHTML=data.Allcount;
+            }
+        })
+        .catch(err => console.error(err))
     },
     TOC: function () {
       if ($('.toc').length > 0 && document.body.clientWidth > 1200) {
@@ -1085,7 +1096,6 @@ var home = location.href,
             $('.toc').removeClass('toc-fixed')
           }
         }
-        $.getScript('//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js');
       }
     },
     AB: function () {
